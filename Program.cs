@@ -134,4 +134,23 @@ app.MapGet("/api/reservations", (CreekRiverDbContext db) =>
         .ToList();
 });
 
+app.MapPost("/api/reservations", (CreekRiverDbContext db, Reservation newRes) =>
+{
+    // Check if reservation checkout is before or the same day as checkin
+    if (newRes.CheckoutDate <= newRes.CheckinDate)
+    {
+        return Results.BadRequest("Reservation checkout must be at least one day after checkin");
+    }
+    try
+    {
+        db.Reservations.Add(newRes);
+        db.SaveChanges();
+        return Results.Created($"/api/reservations/{newRes.Id}", newRes);
+    }
+    catch (DbUpdateException)
+    {
+        return Results.BadRequest("Invalid data submitted");
+    }
+});
+
 app.Run();
