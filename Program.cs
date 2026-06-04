@@ -77,7 +77,6 @@ app.MapDelete("/api/campsites/{id}", (CreekRiverDbContext db, int id) =>
     db.Campsites.Remove(campsite);
     db.SaveChanges();
     return Results.NoContent();
-
 });
 
 app.MapPut("/api/campsites/{id}", (CreekRiverDbContext db, int id, Campsite campsite) =>
@@ -151,6 +150,18 @@ app.MapPost("/api/reservations", (CreekRiverDbContext db, Reservation newRes) =>
     {
         return Results.BadRequest("Invalid data submitted");
     }
+});
+
+app.MapDelete("/api/reservations/{id}", (CreekRiverDbContext db, int id) =>
+{
+    Reservation reservation = db.Reservations.SingleOrDefault(reservation => reservation.Id == id);
+    if (reservation == null)
+    {
+        return Results.NotFound();
+    }
+    db.Reservations.Remove(reservation);
+    db.SaveChanges();
+    return Results.NoContent();
 });
 
 app.Run();
