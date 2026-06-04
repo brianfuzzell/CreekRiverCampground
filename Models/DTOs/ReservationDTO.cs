@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace CreekRiver.Models.DTOs;
 
 public class ReservationDTO
